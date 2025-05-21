@@ -18,7 +18,7 @@ public static class GemCreator
     {
         int index = Random.Range(0, selectedPrefabs.Count);
 
-        Gem gemGameObject = GameObject.Instantiate<Gem>(allGemPrefabs[index]);
+        Gem gemGameObject = GameObject.Instantiate<Gem>(selectedPrefabs[index]);
         BoardChecker.Instance.gems.Add(gemGameObject);
 
         return gemGameObject;

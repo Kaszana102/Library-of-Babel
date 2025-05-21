@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Gem : MonoBehaviour
@@ -26,7 +27,6 @@ public class Gem : MonoBehaviour
     public void Drop()
     {
         vertex.gem = null;
-        vertex = null;
         StartCoroutine(Dropping());
     }
 
@@ -38,6 +38,5 @@ public class Gem : MonoBehaviour
         rb.AddForce(new Vector3(1, 0, 0));
         yield return new WaitForSeconds(2);
         Destroy(gameObject);
-    }
-
+    }   
 }

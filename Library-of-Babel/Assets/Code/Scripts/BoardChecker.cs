@@ -6,7 +6,10 @@ public class BoardChecker : MonoBehaviour
 {
     public static BoardChecker Instance;
 
-    public List<Gem> gems = new List<Gem>();   
+    public List<Gem> gems = new List<Gem>();
+
+    public bool boardFinished { private set; get; } = false;
+    List<Edge> edges;
 
 
     private void Awake()
@@ -18,6 +21,7 @@ public class BoardChecker : MonoBehaviour
         Instance = this;
 
         GemCreator.SelectNewGems();
+        edges = FindObjectsByType<Edge>(FindObjectsSortMode.None).ToList();
     }
 
 
@@ -25,26 +29,82 @@ public class BoardChecker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        List<Gem> gemsToDelete = new List<Gem>();
-        for(int i = gems.Count -1; i>=0; i--)
+        if (!boardFinished)
         {
-            Gem gem = gems[i];
-            if (!gem.Stationed())
-                continue;
-            if (GemInSequence(gem, out var gemsToDrop))
+            List<Gem> gemsToDelete = new List<Gem>();
+            for (int i = gems.Count - 1; i >= 0; i--)
             {
-                foreach(Gem gemToDrop in gemsToDrop)
+                Gem gem = gems[i];
+                if (!gem.Stationed())
+                    continue;
+                if (GemInSequence(gem, out var gemsToDrop))
                 {
-                    gemToDrop.Drop();
+                    var edges = getConnectedEdges(gemsToDrop);
+                    foreach (Edge edge in edges)
+                    {
+                        edge.Decrease();
+                    }
+
+
+                    foreach (Gem gemToDrop in gemsToDrop)
+                    {
+                        gemToDrop.Drop();
+                    }
+                    gemsToDelete.AddRange(gemsToDrop);
                 }
-                gemsToDelete.AddRange(gemsToDrop);
+            }
+            if (gemsToDelete.Count > 0)
+            {
+                gems.RemoveAll(x => gemsToDelete.Contains(x)); ;
+                gemsToDelete.Clear();
+            }
+
+
+            CheckEdgesCompletion();
+        }
+        
+    }
+
+    void CheckEdgesCompletion()
+    {
+        bool allEdgesCompleted = true;
+        foreach(Edge edge in edges)
+        {
+            if (!edge.Finished())
+            {
+                allEdgesCompleted = false;
+                break;
             }
         }
-        if(gemsToDelete.Count > 0)
+        if (allEdgesCompleted)
         {
-            gems.RemoveAll(x => gemsToDelete.Contains(x)); ;
-            gemsToDelete.Clear();
+            Debug.Log("GAME FINSIHED");
+            boardFinished = true;
         }
+    }
+
+    List<Edge> getConnectedEdges(List<Gem> gemGroup)
+    {
+        List<Edge> edges = new List<Edge>();
+        
+        foreach(Gem gem in gemGroup)
+        {
+            foreach(Edge edge in gem.vertex.edges)
+            {
+                Vertex otherEnd = edge.GetOtherEnd(gem.vertex);
+                Gem otherGem = otherEnd.gem;
+                if (otherGem == null)
+                    continue;
+
+                if (!gemGroup.Contains(otherGem))
+                    continue;
+
+                if (edges.Contains(edge))
+                    continue;
+                edges.Add(edge);
+            }
+        }
+        return edges;
     }
 
     bool GemInSequence(Gem startGem, out List<Gem> gemsToDrop)

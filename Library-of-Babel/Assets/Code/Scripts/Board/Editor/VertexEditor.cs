@@ -93,7 +93,8 @@ public class VertexEditor : Editor
     {
         Vertex vertex = target as Vertex;
         GameObject edgesRoot = GetEdgesRoot();
-        Edge edge = new GameObject("Edge").AddComponent<Edge>();
+        Edge edgePrefab = Resources.Load<Edge>("Prefabs/Board/Edge");
+        Edge edge = Instantiate(edgePrefab);
         edge.transform.SetParent(edgesRoot.transform);
         edge.start = vertex;
         edge.end = end;
@@ -109,7 +110,8 @@ public class VertexEditor : Editor
     {
         Vertex vertex = target as Vertex;
         GameObject edgesRoot = GetEdgesRoot();
-        Edge edge = new GameObject("Edge").AddComponent<Edge>();
+        Edge edgePrefab = Resources.Load<Edge>("Prefabs/Board/Edge");
+        Edge edge = Instantiate(edgePrefab);
         edge.transform.SetParent(edgesRoot.transform);
         edge.start = vertex;
         edge.end = end;

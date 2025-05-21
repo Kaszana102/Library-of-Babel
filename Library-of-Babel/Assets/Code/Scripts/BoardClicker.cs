@@ -9,6 +9,10 @@ public class BoardClicker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // do not allow clicking when game finished
+        if (BoardChecker.Instance.boardFinished)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             clickedGem = GetGem();
@@ -81,6 +85,5 @@ public class BoardClicker : MonoBehaviour
         
         a_vertex.PassGemToOtherHolder(b_vertex);
         a_vertex.ReceiveGem(b);
-        var c = 2;
     }
 }
