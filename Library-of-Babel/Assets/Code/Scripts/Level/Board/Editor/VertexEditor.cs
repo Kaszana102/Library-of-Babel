@@ -53,30 +53,30 @@ public class VertexEditor : Editor
             Event e = Event.current;
 
             //Check the event type and make sure it's left click.
-            if ( (e.type == EventType.MouseDown) && e.button == 0)
+            if ((e.type == EventType.MouseDown) && e.button == 0)
             {
                 Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
                 ray.direction = new Vector3(0, 0, 1);
-                object rayCastResult = (RaycastHit) HandleUtility.RaySnap(ray);
+                object rayCastResult = (RaycastHit)HandleUtility.RaySnap(ray);
                 if (rayCastResult != null)
                 {
                     RaycastHit hit = (RaycastHit)rayCastResult;
                     Transform parent = hit.transform.parent;
                     Vertex vertex = parent.GetComponent<Vertex>();
-                    if(vertex != null)
+                    if (vertex != null)
                     {
                         ConnectVertex(vertex);
                         Debug.Log("CLICKED");
                     }
                 }
-                
+
                 e.Use();  //Eat the event so it doesn't propagate through the editor.
                 connecting_flow = false;
                 connecting_connection = false;
             }
-        }   
-    }       
-    
+        }
+    }
+
     void ConnectVertex(Vertex end)
     {
         if (connecting_connection)

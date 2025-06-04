@@ -135,6 +135,13 @@ public class Vertex : GemHolder
         return neighbours.Where(vertex => vertex.gem != null).Select(vertex => vertex.gem).ToList();
     }
 
+
+    public bool Neighbours(Vertex other)
+    {
+        var neighbours = NeighbourVertices();
+        return neighbours.Contains(other);
+    }
+
     public void SetIncomingGem()
     {
         hasIncomingGem = true;

@@ -23,13 +23,29 @@ public class BoardClicker : MonoBehaviour
         if (clickedGem != null && Input.GetKeyUp(KeyCode.Mouse0))
         {
             Gem gemToSwap = GetGem();
-            if(gemToSwap != null)
+
+            if(gemToSwap != null && ValidSwap(gemToSwap))
             {
                 StartCoroutine(SwapGems(clickedGem, gemToSwap));
             }
             clickedGem = null;
         }
     }
+
+    bool ValidSwap(Gem gemToSwap)
+    {
+        if(!BoardChecker.Instance.WillBeInGroup(gemToSwap.vertex, clickedGem))
+        {
+            return false;
+        }
+
+        if (!gemToSwap.vertex.Neighbours(clickedGem.vertex))
+        {
+            return false;
+        }
+
+        return true;
+    } 
 
 
     Gem GetGem()

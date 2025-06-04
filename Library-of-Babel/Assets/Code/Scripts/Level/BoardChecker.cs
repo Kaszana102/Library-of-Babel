@@ -143,4 +143,37 @@ public class BoardChecker : MonoBehaviour
 
         return foundGems >= 3;
     }
+
+    // Check from the start vertex, where the given gem will be moved to, if the 
+    // gem will be in group
+    public bool WillBeInGroup(Vertex start, Gem gemToCheck)
+    {
+        List<Gem> gemsToCheck = new List<Gem>();
+        List<Gem> checkedGems = new List<Gem>() { gemToCheck };
+        List<Gem> gemsInGroup = new List<Gem>() { gemToCheck};
+
+        gemsToCheck = start.NeighboursGems();
+        Gem gem;
+        while (gemsToCheck.Count > 0)
+        {
+            // get neighbour
+            gem = gemsToCheck[0];
+            gemsToCheck.RemoveAt(0);
+            if (gem == null)
+                continue;
+
+            if (checkedGems.Contains(gem))
+                continue;
+            checkedGems.Add(gem);
+
+            if (gem.Stationed() && gem.type == gemToCheck.type)
+            {
+                gemsInGroup.Add(gem);
+                gemsToCheck.AddRange(gem.vertex.NeighboursGems());
+            }
+        }
+
+        int foundGems = gemsInGroup.Count;
+        return foundGems >= 3;
+    }
 }
