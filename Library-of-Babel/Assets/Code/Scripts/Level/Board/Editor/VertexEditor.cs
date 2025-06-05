@@ -95,15 +95,17 @@ public class VertexEditor : Editor
         GameObject edgesRoot = GetEdgesRoot();
         Edge edgePrefab = Resources.Load<Edge>("Prefabs/Board/Edge");
         Edge edge = Instantiate(edgePrefab);
+
+        Undo.RegisterCreatedObjectUndo(edge.gameObject, "Edge creation");
+        Undo.RecordObject(vertex, "Set Flow Start");
+        Undo.RecordObject(end, "Set Flow End");
+
         edge.transform.SetParent(edgesRoot.transform);
         edge.start = vertex;
         edge.end = end;
 
         vertex.outflow.Add(edge);
-        end.inflow.Add(edge);
-
-        PrefabUtility.RecordPrefabInstancePropertyModifications(vertex);
-        PrefabUtility.RecordPrefabInstancePropertyModifications(end);
+        end.inflow.Add(edge);        
     }
 
     void ConnectConnectionVertex(Vertex end)
@@ -112,6 +114,11 @@ public class VertexEditor : Editor
         GameObject edgesRoot = GetEdgesRoot();
         Edge edgePrefab = Resources.Load<Edge>("Prefabs/Board/Edge");
         Edge edge = Instantiate(edgePrefab);
+
+        Undo.RegisterCreatedObjectUndo(edge.gameObject, "Edge creation");
+        Undo.RecordObject(vertex, "Set Flow Start");
+        Undo.RecordObject(end, "Set Flow End");
+
         edge.transform.SetParent(edgesRoot.transform);
         edge.start = vertex;
         edge.end = end;
@@ -119,8 +126,6 @@ public class VertexEditor : Editor
         vertex.connection.Add(edge);
         end.connection.Add(edge);
 
-        PrefabUtility.RecordPrefabInstancePropertyModifications(vertex);
-        PrefabUtility.RecordPrefabInstancePropertyModifications(end);
     }
     GameObject GetEdgesRoot()
     {
