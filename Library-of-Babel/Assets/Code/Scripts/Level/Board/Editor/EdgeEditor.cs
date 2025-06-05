@@ -14,6 +14,10 @@ public class EdgeEditor : Editor
         {
             Edge edge = (Edge)target;
 
+            Undo.RecordObject(edge.start, "remove Flow Start");
+            Undo.RecordObject(edge.end, "Remove Flow End");
+
+
             edge.start.inflow.Remove(edge);
             edge.start.outflow.Remove(edge);
             edge.start.connection.Remove(edge);
@@ -23,10 +27,7 @@ public class EdgeEditor : Editor
             edge.end.connection.Remove(edge);
 
 
-            PrefabUtility.RecordPrefabInstancePropertyModifications(edge);
-            PrefabUtility.RecordPrefabInstancePropertyModifications(edge.start);
-            PrefabUtility.RecordPrefabInstancePropertyModifications(edge.end);
-            DestroyImmediate(edge.gameObject);
+            Undo.DestroyObjectImmediate(edge.gameObject);
         }
         
     }
